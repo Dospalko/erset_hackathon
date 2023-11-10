@@ -37,7 +37,8 @@ def calculate_repayment_plan(monthly_expenses, loan_details):
     basic_monthly_payment = loan_amount * monthly_rate / (1 - (1 + monthly_rate) ** -total_payments)
 
     max_expense = max(monthly_expenses.values())
-    adjusted_payments = {month.strftime('%Y-%m'): basic_monthly_payment - (expense / max_expense * basic_monthly_payment * 0.25)
+    adjusted_payments = {month: basic_monthly_payment - (expense / max_expense * basic_monthly_payment * 0.25)
                          for month, expense in monthly_expenses.items()}
 
     return adjusted_payments
+
