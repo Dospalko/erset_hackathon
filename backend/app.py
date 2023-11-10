@@ -9,17 +9,25 @@ CORS(app)
 def index():
     return jsonify({"message": "Welcome to the AI Bank Project API!"})
 
+
 @app.route('/analyze', methods=['GET'])
 def analyze():
-    result = load_transactions()
-    return jsonify(result)
+    # Load and analyze transactions
+    transactions = load_transactions()
+    return jsonify(transactions)
+
 
 @app.route('/calculate', methods=['GET'])
 def calculate():
+    # Load transactions and loan details
     monthly_expenses = load_transactions()
     loan_details = load_loan_details()
-    result = calculate_repayment_plan(monthly_expenses, loan_details)
-    return jsonify(result)
+
+    # Calculate repayment plan
+    repayment_plan = calculate_repayment_plan(monthly_expenses, loan_details)
+    return jsonify(repayment_plan)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+
