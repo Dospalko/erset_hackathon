@@ -2,7 +2,7 @@ import pandas as pd
 import json
 from datetime import datetime
 
-# Cesty k vašim JSON súborom
+# Definovanie ciest k súborom
 TRANSACTIONS_FILE_PATH = 'data/transactions.json'
 LOAN_DETAILS_FILE_PATH = 'data/loan_details.json'
 
@@ -16,10 +16,7 @@ def analyze_expenses(transactions):
     df['date'] = pd.to_datetime(df['date'])
     df.set_index('date', inplace=True)
 
-    # Výpočet mesačných výdavkov
     monthly_expenses = df.resample('M').sum()
-
-    # Konvertovanie kľúčov na reťazce vo formáte 'YYYY-MM'
     return {date.strftime('%Y-%m'): amount for date, amount in monthly_expenses['amount'].items()}
 
 def load_loan_details(file_path=LOAN_DETAILS_FILE_PATH):
@@ -37,8 +34,7 @@ def calculate_repayment_plan(monthly_expenses, loan_details):
     basic_monthly_payment = loan_amount * monthly_rate / (1 - (1 + monthly_rate) ** -total_payments)
 
     max_expense = max(monthly_expenses.values())
-    adjusted_payments = {month: basic_monthly_payment - (expense / max_expense * basic_monthly_payment * 0.25)
+    adjusted_payments = {month: max(0, basic_monthly_payment - (expense / max_expense * basic_monthly_payment * 0.25))
                          for month, expense in monthly_expenses.items()}
 
     return adjusted_payments
-
