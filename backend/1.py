@@ -12,10 +12,13 @@ def generate_realistic_transactions(num_customers, transactions_per_month, categ
 
         for transaction_date in dates:
             balance = 0  # Starting balance for the month
+            monthly_cumulative_expenses = 0  # Cumulative monthly expenses
+            monthly_transaction_count = 0  # Count of transactions
 
             # Record income as a positive transaction
             monthly_income = income_data[transaction_date]
             balance += monthly_income
+            monthly_transaction_count += 1
             transactions.append({
                 'customer_id': customer_id,
                 'date': transaction_date.strftime('%Y-%m-%d'),
@@ -29,6 +32,7 @@ def generate_realistic_transactions(num_customers, transactions_per_month, categ
             for _ in range(2):
                 gift_amount = np.random.uniform(5, 20)  # Gift amount up to 20 euros
                 balance += gift_amount
+                monthly_transaction_count += 1
                 transactions.append({
                     'customer_id': customer_id,
                     'date': transaction_date.strftime('%Y-%m-%d'),
@@ -46,6 +50,8 @@ def generate_realistic_transactions(num_customers, transactions_per_month, categ
                     max_amount = min(balance - min_balance_for_loan, category_mean_amounts[category])
                     amount = np.random.uniform(min_amount, max_amount)
                     balance -= amount
+                    monthly_cumulative_expenses += amount
+                    monthly_transaction_count += 1
                     transactions.append({
                         'customer_id': customer_id,
                         'date': transaction_date.strftime('%Y-%m-%d'),
@@ -54,6 +60,11 @@ def generate_realistic_transactions(num_customers, transactions_per_month, categ
                         'payment_type': np.random.choice(['cash', 'credit_card', 'debit_card', 'online']),
                         'balance': round(balance, 2)
                     })
+
+            # Additional features
+            transactions[-1]['monthly_cumulative_expenses'] = round(monthly_cumulative_expenses, 2)
+            transactions[-1]['expense_to_income_ratio'] = round(monthly_cumulative_expenses / monthly_income, 2) if monthly_income != 0 else 0
+            transactions[-1]['average_monthly_balance'] = round((balance + abs(monthly_cumulative_expenses)), 2)
 
     return transactions
 
@@ -92,4 +103,4 @@ category_min_amounts = {'groceries': 30, 'utilities': 50, 'dining': 10, 'shoppin
 transactions_df = pd.DataFrame(generate_realistic_transactions(num_customers, transactions_per_month, category_mean_amounts, start_date, end_date, min_balance_for_loan))
 output_path = 'data/realistic_transactions.json'
 transactions_df.to_json(output_path, orient='records', date_format='iso')
-print("Modified dataset with managed expenses and gifts generated and saved to:", output_path)
+print("Modified dataset with additional features generated and saved to:", output_path)
