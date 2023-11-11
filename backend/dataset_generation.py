@@ -43,7 +43,10 @@ def generate_user_transactions(num_months, start_date, end_date, total_loan_amou
                         1 - necessary_expense_impact)
             adjusted_loan_payment = base_monthly_loan_payment * (1 - adjustment_factor)
         else:
-            adjusted_loan_payment = base_monthly_loan_payment
+            necessary_expense_impact = necessary_expenses / total_expenses
+            adjustment_factor = loan_reduction_rate * necessary_expense_impact + loan_reduction_rate * 0.5 * (
+                    1 - necessary_expense_impact)
+            adjusted_loan_payment = base_monthly_loan_payment * (1 + adjustment_factor)
 
         adjusted_loan_payment = min(adjusted_loan_payment, remaining_loan_balance)
         remaining_loan_balance -= adjusted_loan_payment
@@ -62,19 +65,17 @@ def generate_user_transactions(num_months, start_date, end_date, total_loan_amou
 
 
 # Parameters for the dataset generation
-num_months = 100
+num_months = 36
 start_date = datetime(2022, 1, 1)
-end_date = datetime(2029, 12, 31)
-total_loan_amount = 10000
-loan_duration_months = 100
-expense_increase_threshold = 200  # Expense increase threshold for loan payment adjustment
-loan_reduction_rate = 0.2  # Loan reduction rate when expense increase threshold is exceeded
+end_date = datetime(2024, 12, 31)
+total_loan_amount = 30000
+loan_duration_months = 36
+expense_increase_threshold = 100  # Expense increase threshold for loan payment adjustment
+loan_reduction_rate = 0.25  # Loan reduction rate when expense increase threshold is exceeded
 loan_commission_rate = 0.05
-max_loan_fluctuation = 0.2  # Max fluctuation of loan payment amount
+max_loan_fluctuation = 0.1  # Max fluctuation of loan payment amount
 # Generate the dataset
 user_transactions_df = pd.DataFrame(generate_user_transactions(num_months, start_date, end_date, total_loan_amount, loan_duration_months, max_loan_fluctuation, loan_commission_rate))
-total_loan_payments = user_transactions_df['loan_payment'].sum()
-print(f"Total amount paid towards the loan: {total_loan_payments}")
 
 # Save the dataframe to CSV
 output_path = os.path.join('data', 'user_transactions.csv')

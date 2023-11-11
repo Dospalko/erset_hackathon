@@ -1,0 +1,32 @@
+[
+    {
+        "customer_id": 0,
+        "loan_amount": 10000,
+        "annual_interest_rate": 5,
+        "loan_term_years": 5
+    },
+    {
+        "customer_id": 1,
+        "loan_amount": 15000,
+        "annual_interest_rate": 4,
+        "loan_term_years": 4
+    },
+    {
+        "customer_id": 2,
+        "loan_amount": 20000,
+        "annual_interest_rate": 3,
+        "loan_term_years": 3
+    },
+    {
+        "customer_id": 3,
+        "loan_amount": 25000,
+        "annual_interest_rate": 2,
+        "loan_term_years": 2
+    },
+    {
+        "customer_id": 4,
+        "loan_amount": 30000,
+        "annual_interest_rate": 1,
+        "loan_term_years": 1
+    }
+]
