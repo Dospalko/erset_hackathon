@@ -65,7 +65,7 @@ def generate_user_transactions(num_months, start_date, end_date, total_loan_amou
 num_months = 100
 start_date = datetime(2022, 1, 1)
 end_date = datetime(2029, 12, 31)
-total_loan_amount = 30000
+total_loan_amount = 10000
 loan_duration_months = 100
 expense_increase_threshold = 200  # Expense increase threshold for loan payment adjustment
 loan_reduction_rate = 0.2  # Loan reduction rate when expense increase threshold is exceeded
