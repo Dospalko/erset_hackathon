@@ -7,7 +7,6 @@ def generate_user_transactions(num_months, start_date, end_date, total_loan_amou
     transactions = []
     dates = pd.date_range(start_date, end_date, freq='M')
 
-
     total_loan_with_commission = total_loan_amount * (1 + loan_commission_rate)
     base_monthly_loan_payment = total_loan_with_commission / loan_duration_months
     remaining_loan_balance = total_loan_with_commission
@@ -63,17 +62,19 @@ def generate_user_transactions(num_months, start_date, end_date, total_loan_amou
 
 
 # Parameters for the dataset generation
-num_months = 36
+num_months = 100
 start_date = datetime(2022, 1, 1)
-end_date = datetime(2024, 12, 31)
+end_date = datetime(2029, 12, 31)
 total_loan_amount = 30000
-loan_duration_months = 36
+loan_duration_months = 100
 expense_increase_threshold = 200  # Expense increase threshold for loan payment adjustment
 loan_reduction_rate = 0.2  # Loan reduction rate when expense increase threshold is exceeded
 loan_commission_rate = 0.05
-max_loan_fluctuation = 0.1  # Max fluctuation of loan payment amount
+max_loan_fluctuation = 0.2  # Max fluctuation of loan payment amount
 # Generate the dataset
 user_transactions_df = pd.DataFrame(generate_user_transactions(num_months, start_date, end_date, total_loan_amount, loan_duration_months, max_loan_fluctuation, loan_commission_rate))
+total_loan_payments = user_transactions_df['loan_payment'].sum()
+print(f"Total amount paid towards the loan: {total_loan_payments}")
 
 # Save the dataframe to CSV
 output_path = os.path.join('data', 'user_transactions.csv')
